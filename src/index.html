@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Site na AWS</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="logo">AWS Site</h1>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Bem-vindo ao Futuro</h1>
+            <p class="hero-subtitle">Site estático hospedado com S3 e CloudFront</p>
+            <button class="cta-button">Começar Agora</button>
+        </div>
+        <div class="hero-animation">
+            <div class="circle circle-1"></div>
+            <div class="circle circle-2"></div>
+            <div class="circle circle-3"></div>
+        </div>
+    </section>
+
+    <section id="sobre" class="features">
+        <div class="container">
+            <h2 class="section-title">Por que AWS?</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="icon">⚡</div>
+                    <h3>Ultra Rápido</h3>
+                    <p>CloudFront distribui seu conteúdo globalmente com baixa latência</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">🔒</div>
+                    <h3>Seguro</h3>
+                    <p>HTTPS automático e proteção DDoS integrada</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">💰</div>
+                    <h3>Econômico</h3>
+                    <p>Pague apenas pelo que usar, sem servidores</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contato" class="contact">
+        <div class="container">
+            <h2 class="section-title">Entre em Contato</h2>
+            <form class="contact-form">
+                <input type="text" placeholder="Seu nome" required>
+                <input type="email" placeholder="Seu email" required>
+                <textarea placeholder="Sua mensagem" rows="5" required></textarea>
+                <button type="submit" class="submit-button">Enviar Mensagem</button>
+            </form>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2024 AWS Site. Hospedado com S3 + CloudFront</p>
+    </footer>
+
+    <script src="assets/js/script.js"></script>
+</body>
+</html>
