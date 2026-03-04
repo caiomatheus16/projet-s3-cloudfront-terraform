@@ -84,4 +84,4 @@ MIT License - Projeto para fins educacionais e portfólio
 ---
 
 **Desenvolvido por:** [Caio Matheus]
-**Contato:** [Seu Email/LinkedIn]
+**Contato:** [caiomleao16@gmail.com/https://www.linkedin.com/in/caio-matheus-cloud/]
