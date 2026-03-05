@@ -28,17 +28,12 @@ jobs:
       - name: Verify AWS credentials
         run: aws sts get-caller-identity
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.0.0
-
-      - name: Get Bucket Name
+      - name: Get Bucket Name from tfvars
         id: bucket
         working-directory: ${{ env.TERRAFORM_DIR }}
         run: |
-          terraform init -backend=false
-          echo "name=$(terraform output -raw bucket_name 2>/dev/null || echo '')" >> $GITHUB_OUTPUT
+          BUCKET_NAME=$(grep 'bucket_name' terraform.tfvars | cut -d '=' -f2 | tr -d ' "')
+          echo "name=$BUCKET_NAME" >> $GITHUB_OUTPUT
 
       - name: Sync files to S3
         run: |
