@@ -20,6 +20,7 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: us-east-1
+      S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
     
     steps:
       - name: Checkout code
@@ -30,15 +31,15 @@ jobs:
 
       - name: Debug bucket name
         run: |
-          echo "Bucket name: ${{ secrets.S3_BUCKET_NAME }}"
-          if [ -z "${{ secrets.S3_BUCKET_NAME }}" ]; then
-            echo "ERROR: S3_BUCKET_NAME secret is not set!"
+          echo "Bucket name from secret: $S3_BUCKET_NAME"
+          if [ -z "$S3_BUCKET_NAME" ]; then
+            echo "ERROR: S3_BUCKET_NAME is empty!"
             exit 1
           fi
 
       - name: Sync files to S3
         run: |
-          aws s3 sync src/ s3://${{ secrets.S3_BUCKET_NAME }}/ \
+          aws s3 sync src/ s3://${S3_BUCKET_NAME}/ \
             --exclude ".*" \
             --delete
 
@@ -46,7 +47,7 @@ jobs:
         id: cloudfront
         run: |
           DISTRIBUTION_ID=$(aws cloudfront list-distributions \
-            --query "DistributionList.Items[?Origins.Items[?Id=='S3-${{ secrets.S3_BUCKET_NAME }}']].Id" \
+            --query "DistributionList.Items[?Origins.Items[?Id=='S3-${S3_BUCKET_NAME}']].Id" \
             --output text)
           echo "id=$DISTRIBUTION_ID" >> $GITHUB_OUTPUT
 
