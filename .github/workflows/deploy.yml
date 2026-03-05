@@ -28,16 +28,17 @@ jobs:
       - name: Verify AWS credentials
         run: aws sts get-caller-identity
 
-      - name: Get Bucket Name from tfvars
-        id: bucket
-        working-directory: ${{ env.TERRAFORM_DIR }}
+      - name: Debug bucket name
         run: |
-          BUCKET_NAME=$(grep 'bucket_name' terraform.tfvars | cut -d '=' -f2 | tr -d ' "')
-          echo "name=$BUCKET_NAME" >> $GITHUB_OUTPUT
+          echo "Bucket name: ${{ secrets.S3_BUCKET_NAME }}"
+          if [ -z "${{ secrets.S3_BUCKET_NAME }}" ]; then
+            echo "ERROR: S3_BUCKET_NAME secret is not set!"
+            exit 1
+          fi
 
       - name: Sync files to S3
         run: |
-          aws s3 sync src/ s3://${{ steps.bucket.outputs.name }}/ \
+          aws s3 sync src/ s3://${{ secrets.S3_BUCKET_NAME }}/ \
             --exclude ".*" \
             --delete
 
@@ -45,7 +46,7 @@ jobs:
         id: cloudfront
         run: |
           DISTRIBUTION_ID=$(aws cloudfront list-distributions \
-            --query "DistributionList.Items[?Origins.Items[?Id=='S3-${{ steps.bucket.outputs.name }}']].Id" \
+            --query "DistributionList.Items[?Origins.Items[?Id=='S3-${{ secrets.S3_BUCKET_NAME }}']].Id" \
             --output text)
           echo "id=$DISTRIBUTION_ID" >> $GITHUB_OUTPUT
 
