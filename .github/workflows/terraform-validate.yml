@@ -1,11 +1,13 @@
-name: Validate
+name: Terraform Validate
 
 on:
   pull_request:
+    paths:
+      - 'terraform/**'
+  push:
     branches:
       - main
     paths:
-      - 'src/**'
       - 'terraform/**'
 
 env:
@@ -37,4 +39,4 @@ jobs:
         run: terraform validate
 
       - name: Validation Summary
-        run: echo "✅ Validação concluída com sucesso!"
+        run: echo "✅ Terraform validado com sucesso!"

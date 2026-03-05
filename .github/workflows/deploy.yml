@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - 'src/**'
-      - 'terraform/**'
   workflow_dispatch:
 
 env:
@@ -26,7 +25,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Configure AWS credentials
+      - name: Verify AWS credentials
         run: aws sts get-caller-identity
 
       - name: Setup Terraform
@@ -34,22 +33,12 @@ jobs:
         with:
           terraform_version: 1.0.0
 
-      - name: Terraform Init
-        working-directory: ${{ env.TERRAFORM_DIR }}
-        run: terraform init
-
-      - name: Terraform Plan
-        working-directory: ${{ env.TERRAFORM_DIR }}
-        run: terraform plan
-
-      - name: Terraform Apply
-        working-directory: ${{ env.TERRAFORM_DIR }}
-        run: terraform apply -auto-approve
-
       - name: Get Bucket Name
         id: bucket
         working-directory: ${{ env.TERRAFORM_DIR }}
-        run: echo "name=$(terraform output -raw bucket_name)" >> $GITHUB_OUTPUT
+        run: |
+          terraform init -backend=false
+          echo "name=$(terraform output -raw bucket_name 2>/dev/null || echo '')" >> $GITHUB_OUTPUT
 
       - name: Sync files to S3
         run: |
@@ -59,7 +48,6 @@ jobs:
 
       - name: Get CloudFront Distribution ID
         id: cloudfront
-        working-directory: ${{ env.TERRAFORM_DIR }}
         run: |
           DISTRIBUTION_ID=$(aws cloudfront list-distributions \
             --query "DistributionList.Items[?Origins.Items[?Id=='S3-${{ steps.bucket.outputs.name }}']].Id" \
@@ -76,4 +64,5 @@ jobs:
       - name: Deploy Summary
         run: |
           echo "✅ Deploy concluído!"
-          echo "🌐 CloudFront URL: $(cd ${{ env.TERRAFORM_DIR }} && terraform output -raw cloudfront_url)"
+          echo "📦 Arquivos sincronizados para S3"
+          echo "🔄 Cache do CloudFront invalidado"
